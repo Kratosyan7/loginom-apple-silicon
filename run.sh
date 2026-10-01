@@ -75,13 +75,10 @@ cat <<INFO
 
   Подключение : vnc://localhost:5900
   Пароль      : loginom
-  Общая папка : $SHARE  (внутри Loginom это /data)
+  Общая папка : $SHARE  (в Loginom — раздел «Данные» слева)
 
 Окно будет белым первые 60-90 секунд, пока грузится интерфейс. Это нормально.
-
-  docker stop $NAME      остановить
-  docker start $NAME     запустить снова
-  docker exec $NAME screenshot   снимок экрана в общую папку
+Чтобы запустить снова в следующий раз — этот же ./run.sh
 
 INFO
 open vnc://localhost:5900 2>/dev/null || true

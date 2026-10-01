@@ -50,6 +50,11 @@ RUN printf '%s\n' \
   'echo "$OUT"' \
   > /usr/local/bin/screenshot && chmod +x /usr/local/bin/screenshot
 
+# /data видна в боковой панели диалога выбора файла и в домашней папке
+RUN mkdir -p /root/.config/gtk-3.0 \
+    && printf 'file:///data %s\n' 'Данные' > /root/.config/gtk-3.0/bookmarks \
+    && ln -sfn /data /root/data
+
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
