@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && sed -i 's/# ru_RU.UTF-8/ru_RU.UTF-8/' /etc/locale.gen && locale-gen \
     && rm -rf /var/lib/apt/lists/*
 
-# box64 собирается нативно под arm64 — это быстро
+# box64 собирается нативно под arm64, поэтому быстро
 RUN git clone --depth 1 https://github.com/ptitSeb/box64 /tmp/box64 \
     && mkdir -p /tmp/box64/build && cd /tmp/box64/build \
     && cmake .. -DARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -32,7 +32,7 @@ RUN dpkg --add-architecture amd64 && apt-get update && apt-get install -y --no-i
       libmariadb3:amd64 \
     && rm -rf /var/lib/apt/lists/*
 
-# нативные arm64 GTK/GLib/ATK/Wayland — box64 оборачивает их вместо трансляции.
+# нативные arm64 GTK/GLib/ATK/Wayland: box64 оборачивает их вместо трансляции.
 # -dev пакеты нужны ради безверсионных симлинков (libgtk-3.so), которые box64 ищет по имени.
 RUN apt-get update && apt-get install -y --no-install-recommends \
       libgtk-3-dev libatk1.0-dev libatk-bridge2.0-dev libatspi2.0-dev \
