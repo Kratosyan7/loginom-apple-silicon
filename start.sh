@@ -2,8 +2,14 @@
 # чистим локи прошлого запуска, иначе Xvfb не займёт :1
 rm -f /tmp/.X*-lock /tmp/.X11-unix/X* 2>/dev/null
 
-Xvfb :1 -screen 0 1600x1000x24 -nolisten tcp &
+# -noreset: без него Xvfb сбрасывает раскладку, когда отключается последний
+# клиент, и setxkbmap ниже (он запускается первым) ни на что не влияет
+Xvfb :1 -screen 0 1600x1000x24 -nolisten tcp -noreset &
 for i in $(seq 1 60); do [ -e /tmp/.X11-unix/X1 ] && break; sleep 0.5; done
+
+# русская раскладка в X: без неё x11vnc раскидывает кириллицу по свободным
+# кейкодам, их не хватает, и буквы начинают пропадать
+setxkbmap -layout us,ru -option ""
 
 fluxbox >/dev/null 2>&1 &
 
@@ -14,7 +20,8 @@ autocutsel -selection PRIMARY >/dev/null 2>&1 &
 
 mkdir -p /root/.vnc
 x11vnc -storepasswd loginom /root/.vnc/passwd >/dev/null 2>&1
-x11vnc -display :1 -forever -shared -threads \
+# -xkb: искать символы во всех раскладках, иначе кириллица пропадает
+x11vnc -display :1 -forever -shared -threads -xkb \
        -rfbauth /root/.vnc/passwd -rfbport 5900 -quiet >/dev/null 2>&1 &
 
 # профиль box64 для CEF, по аналогии со штатными профилями chrome/ONLYOFFICE
